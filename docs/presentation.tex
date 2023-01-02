@@ -4,6 +4,10 @@
 \usecolortheme{wolverine}
 \usefonttheme{professionalfonts}
 
+\usepackage[backend=biber, style=authoryear]{biblatex}
+\addbibresource{references.bib}
+\nocite{*}
+
 \title{Singular Value Decomposition}
 \subtitle{An application to Big Data}
 \author{Davide Sferrazza}
@@ -68,6 +72,10 @@
     $$ A^T = (U \Sigma V^T)^T = V \Sigma^T U^T$$
 
     
+\end{frame}
+
+\begin{frame}[noframenumbering]{References}
+    \printbibliography
 \end{frame}
 
 \end{document}
