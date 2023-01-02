@@ -1,8 +1,13 @@
 \documentclass{beamer}
-\usepackage{bm}
 \usetheme{Rochester}
 \usecolortheme{wolverine}
 \usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{bm}
+\usepackage{amsmath, amssymb}
+\usepackage{ragged2e}
+\justifying
 
 \usepackage[backend=biber, style=authoryear]{biblatex}
 \addbibresource{references.bib}
@@ -42,7 +47,7 @@
                 \sigma_i, & i = j
             \end{cases} 
         $$
-        where $\sigma_1 \ge \sigma_2 \ge \ldots  \ge \sigma_p \ge 0$, $p = \textrm min\{m, \, n\}$.
+        where $\sigma_1 \ge \sigma_2 \ge \ldots  \ge \sigma_p \ge 0$, $p = \min\{m, n\}$.
     \end{theorem}
 \end{frame}
 
@@ -59,19 +64,57 @@
 
 \end{frame}
 
-\begin{frame}
-    \frametitle{Definition of SVD}
-    
+\begin{frame}{Definition of SVD}
+    \begin{theorem}
+        If for some $r$ such that $ 1 \le r < p $ we have
+        $$ \sigma_1 \ge \ldots \ge \sigma_{r} > \sigma_{r + 1} = \ldots = \sigma_p = 0  $$
+        then
+        \begin{itemize}
+            \item $rank(A) = r$
+            \item $ A = \sum \limits_{i = 1}^{r} \bm{u_i} \sigma_i \bm{v_i}^T $
+        \end{itemize}
+    \end{theorem}
+
+    This means that all other $p-r$ dimensions of matrix $A$ are linear combinations of the first $r$.
+\end{frame}
+
+\begin{frame}{Definition of SVD}
+    \begin{block}{Lower rank approximation}
+        Let $A \in \mathbb{R}^{m \times n}$ be a matrix whose rank is $rank(A) = r$. \\
+        If for a fixed integer value $k < r$ we define
+        \begin{equation}
+            \label{eq:lower_rank}
+            A_k = \sum \limits_{i = 1}^{k} \sigma_i \bm{u_i}  \bm{v_i}^T 
+        \end{equation}
+        and
+        $$ \mathcal{B} = \left\{ B \in \mathbb{R}^{m \times n} : rank(B) = k \right\}$$
+        then 
+        $$ \min_{B \in \mathcal{B}} \left\lVert A - B \right\rVert _2 = \left\lVert A - A_k \right\rVert _2 = \sigma_{k + 1} $$
+    \end{block}
+        
+    This result tell us that $A_k$ represents the best approximation (considering the \textit{spectral norm}) of rank $k$ of matrix $A$.
 \end{frame}
 
 \subsection{How can singular values be computed?}
 
-\begin{frame}
-    \frametitle{Singular values computation}
+\begin{frame}{Singular values computation}
     To compute the singular values, consider the transponse of $A$ given its decomposition:
     $$ A^T = (U \Sigma V^T)^T = V \Sigma^T U^T$$
+    The symmetric matrix $A^T A$ is equal to:
+    $$ A^T A = ( V \Sigma^T U^T )(U \Sigma V^T) = V \Sigma^T \Sigma V^T$$
+    Furthermore, this equation can be written as:
+    $$ A^T A V = V \Sigma^T \Sigma $$
+    This means that the diagonal entries of the square matrix $ \Sigma^T \Sigma $, which are the square of the singular values, are the eigenvalues of matrix $A^T A$ and $ V $ is the matrix of eigenvectors.
+\end{frame}
 
-    
+\begin{frame}{Singular values computation}
+    Similarly, consider the product of $A A^T$. It is equal to:
+    $$ A A^T = (U \Sigma V^T)( V \Sigma^T U^T ) = U \Sigma \Sigma^T U^T$$
+    Which means that:
+    $$ AA^T U = U \Sigma \Sigma^T $$
+    Hence $U$ is the matrix of eigenvectors of $AA^T$. \bigskip
+
+    Since $rank(A) = r$, only the first $r$ eigenvalues of $AA^T$ and $A^T A$ are non-zero.
 \end{frame}
 
 \begin{frame}[noframenumbering]{References}
