@@ -1,0 +1,73 @@
+\documentclass{beamer}
+\usepackage{bm}
+\usetheme{Rochester}
+\usecolortheme{wolverine}
+\usefonttheme{professionalfonts}
+
+\title{Singular Value Decomposition}
+\subtitle{An application to Big Data}
+\author{Davide Sferrazza}
+\institute{Università degli Studi di Palermo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Outline}
+    \tableofcontents
+\end{frame}
+
+\section{Singular Value Decomposition}
+\subsection{What is it?}
+
+\begin{frame}
+    \frametitle{Definition of SVD}
+    \begin{theorem}
+        Given a matrix $A \in \mathbb{R}^{m \times n}$, it can always be found a decomposition such that
+        $$A = U \Sigma V^T$$
+        where $U \in \mathbb{R}^{m \times m}$, $V \in \mathbb{R}^{n \times n}$ and $\Sigma \in \mathbb{R}^{m \times n}$.
+
+        $U$ and $V$ are two orthogonal matrices and $\Sigma$ is a diagonal matrix, namely:
+        $$ ( \Sigma )_{ij} = 
+            \begin{cases}
+                0, & i \ne j \\
+                \sigma_i, & i = j
+            \end{cases} 
+        $$
+        where $\sigma_1 \ge \sigma_2 \ge \ldots  \ge \sigma_p \ge 0$, $p = \textrm min\{m, \, n\}$.
+    \end{theorem}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Definition of SVD}
+    The non-zero entries of $\Sigma$, denoted by $\sigma_i$, are called \textit{singular values}.
+
+    They are arrenged in a nonincreasing order by convention.
+
+    The column vectors $\bm{u_i}$ of $U$ are called \textit{left singular vectors} and those $\bm{v_i}$ of $V$ are called \textit{right singular vectors}. \bigskip
+    
+    Since in general $m \ne n$, we have: 
+    $$ A = \sum_{i = 1}^{p} \bm{u_i} \sigma_i \bm{v_i}^T $$
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Definition of SVD}
+    
+\end{frame}
+
+\subsection{How can singular values be computed?}
+
+\begin{frame}
+    \frametitle{Singular values computation}
+    To compute the singular values, consider the transponse of $A$ given its decomposition:
+    $$ A^T = (U \Sigma V^T)^T = V \Sigma^T U^T$$
+
+    
+\end{frame}
+
+\end{document}
