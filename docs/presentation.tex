@@ -1,15 +1,21 @@
-\documentclass{beamer}
-\usetheme{Rochester}
+\documentclass[10pt]{beamer}
+\definecolor{title}{RGB}{1, 45, 112}
+\definecolor{body}{RGB}{218, 233, 255}
+\usetheme[progressbar=frametitle]{metropolis}
 \usecolortheme{wolverine}
 \usefonttheme{professionalfonts}
 \setbeamertemplate{navigation symbols}{}
+\setbeamercolor{block title}{bg=title,fg=white}
+\setbeamercolor{block body}{bg=body,fg=black}
+\setbeamertemplate{section in toc}[square]
+\setbeamertemplate{subsection in toc}[square]
 
 \usepackage{bm}
 \usepackage{amsmath, amssymb}
 \usepackage{ragged2e}
 \justifying
 
-\usepackage[backend=biber, style=authoryear]{biblatex}
+\usepackage[backend=biber, style=verbose]{biblatex}
 \addbibresource{references.bib}
 \nocite{*}
 
@@ -19,11 +25,12 @@
 \institute{Università degli Studi di Palermo}
 \date{\today}
 
-\begin{document}
+\def\titlepage{%
+  \usebeamertemplate{title page}%
+}
 
-\begin{frame}
-    \titlepage
-\end{frame}
+\begin{document}
+\maketitle
 
 \begin{frame}
     \frametitle{Outline}
@@ -117,6 +124,7 @@
     Since $rank(A) = r$, only the first $r$ eigenvalues of $AA^T$ and $A^T A$ are non-zero.
 \end{frame}
 
+\section{References}
 \begin{frame}[noframenumbering]{References}
     \printbibliography
 \end{frame}
