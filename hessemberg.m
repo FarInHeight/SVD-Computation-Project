@@ -7,16 +7,16 @@ function [A, P] = hessemberg(A)
     P = eye(n);
     for k=1:n-2
         sigma = sign(A(k+1, k)) * norm(A(k+1:n, k));
-        v = [sigma + A(k+1, k); A(k+2:n, k)];  % vettore v
-        beta = 1 / (sigma * (sigma + A(k+1, k))); % beta
+        v = [sigma + A(k+1, k); A(k+2:n, k)]; 
+        beta = 1 / (sigma * (sigma + A(k+1, k))); 
         for j=k:n
-            tau = beta * (v' * A(k+1:n, j)); % tau
+            tau = beta * (v' * A(k+1:n, j)); 
             A(k+1:n, j) = A(k+1:n, j) - tau * v;
         end
         for j=1:n
-            tau = beta * (A(j, k+1:n) * v); % tau
+            tau = beta * (A(j, k+1:n) * v);
             A(j, k+1:n) = A(j, k+1:n) - tau * v';
-            tau = beta * (P(j, k+1:n) * v); % tau
+            tau = beta * (P(j, k+1:n) * v); 
             P(j, k+1:n) = P(j, k+1:n) - tau * v';
         end
     end
