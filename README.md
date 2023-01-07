@@ -1,2 +1,2 @@
 # Advanced-Numerical-Methods-Project
-Project for the Advamced Numerical Methods course - Università degli Studi di Palermo 
+Project for the Advanced Numerical Methods course - Università degli Studi di Palermo 
