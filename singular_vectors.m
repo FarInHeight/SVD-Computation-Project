@@ -5,9 +5,9 @@ function [M, H] = singular_vectors(A, toll, left)
 %   corrisponding singular values. If left is true then U is calculated, V
 %   otherwise.
     if left
-        [P, H] = hess(A * A.');
+        [H, P] = hessemberg(A * A.');
     else
-        [P, H] = hess(A.' * A);
+        [H, P] = hessemberg(A.' * A);
     end
     
     n = length(H);
@@ -39,12 +39,7 @@ function [M, H] = singular_vectors(A, toll, left)
             G_aux(2, 2) = G(k, 1);
 
             H(1:k+1, k:k+1) = H(1:k+1, k:k+1) * G_aux;
-            P = eye(n);
-            P(k, k) = G(k, 1);
-            P(k, k+1) = G(k, 2); 
-            P(k+1, k) = - G(k, 2);
-            P(k+1, k+1) = G(k, 1);
-            M = M * P;
+            M(1:n, k:k+1) = M(1:n, k:k+1) * G_aux;
         end
         
         err1 = norm(diag(H - H1), 1);
@@ -59,4 +54,3 @@ function [M, H] = singular_vectors(A, toll, left)
         M = real(M);
     end
 end
-

@@ -6,4 +6,3 @@ function [c, s] = givens(A, i, j)
      c = abs( A(i, i) ) / sqrt( A(i, i)^2 + A(j, i)^2 );
      s = - sign( A(j, i) / A(i, i) ) * abs( A(j, i) ) / sqrt( A(i, i)^2 + A(j, i)^2 );
 end
-

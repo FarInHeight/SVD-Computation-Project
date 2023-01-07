@@ -11,8 +11,9 @@ function [U, S, V] = custom_svd(A, toll)
         S = S1(1:minimum, :);
         
         for k = 1:minimum
-            vector = A' * U(:, k);
-            if sign( vector(1) ) ~= sign( V(1, k) )
+            B = A';
+            constant = B(1, :) * U(:, k);
+            if sign( constant ) ~= sign( V(1, k) )
                 V(:, k) = - V(:, k);
             end
         end
@@ -20,11 +21,10 @@ function [U, S, V] = custom_svd(A, toll)
         S = S(:, 1:minimum);
 
         for k = 1:minimum
-            vector = A * V(:, k);
-            if sign( vector(1) ) ~= sign( U(1, k) )
+            constant = A(1, :) * V(:, k);
+            if sign( constant ) ~= sign( U(1, k) )
                 U(:, k) = - U(:, k);
             end
         end
     end
 end
-
