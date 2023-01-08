@@ -16,12 +16,14 @@ function [M, H] = singular_vectors(A, toll, left)
     G_aux = zeros(2);
 
     M = P;
-    err1 = toll + 1;
-    err2 = toll + 1;
+    err = toll + 1;
     
-    while err1 > toll || err2 > toll
+    while err > toll 
         H1 = H;
-        M1 = M;
+        T = H(n, n) * eye(n);
+
+        H = H - T;
+
         for k = 1:n-1
             [G(k, 1), G(k, 2)] = givens(H, k, k+1);
             G_aux(1, 1) = G(k, 1);
@@ -42,15 +44,19 @@ function [M, H] = singular_vectors(A, toll, left)
             M(1:n, k:k+1) = M(1:n, k:k+1) * G_aux;
         end
         
-        err1 = norm(diag(H - H1), 1);
-        err2 = norm(max(M - M1), 1);
+        H = H + T;
+
+        err = norm(diag(H - H1), 1);
     end
 
     H = sqrt( diag( diag( H ) ) );
-    if all( imag( diag(H) ) < toll )
+
+    discard_imag = 10^-5;
+
+    if all( imag( diag(H) ) < discard_imag )
         H = real(H);
     end
-    if all( imag( diag(M) ) < toll )
+    if all( imag( diag(M) ) < discard_imag )
         M = real(M);
     end
 end
