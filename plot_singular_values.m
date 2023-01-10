@@ -12,6 +12,7 @@ function plot_singular_values(singular_values)
     ylabel('SINGULAR VALUE MAGNITUDES');
     subplot(1, 2, 2);
     plot( cumsum( singular_values.^2 ) / sum( singular_values.^2 ), 'LineWidth', 2);
+    grid on;
     xlabel('SINGULAR VALUES FROM LARGEST TO SMALLEST');
     ylabel('RETAINED ENERGY');
     pos = get(gcf, 'Position');
