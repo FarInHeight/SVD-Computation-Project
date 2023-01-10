@@ -10,7 +10,36 @@
 \setbeamertemplate{section in toc}[square]
 \setbeamertemplate{subsection in toc}[square]
 
+\usepackage[T1]{fontenc}
 \usepackage{libertinus}
+\usepackage{listings}
+
+% settings for code listings (colors and appearence)
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
 
 \usepackage{bm}
 \usepackage{amsmath, amssymb}
@@ -124,6 +153,77 @@
     Hence $U$ is the matrix of eigenvectors of $AA^T$. \bigskip
 
     Since $rank(A) = r$, only the first $r$ eigenvalues of $AA^T$ and $A^T A$ are non-zero.
+\end{frame}
+
+\section{Finding eigenvalues and eigenvectors}
+\subsection{QR Method}
+
+\begin{frame}{QR Method}
+    A possible method to find eigenvalues and eigenvectors of a matrix is based on $QR$ decompositions and this theorem:
+    \begin{theorem}
+        Suppose $A \in \mathbb{R}^{n \times n}$ is a matrix having eigenvalues $\lambda_1, \lambda_2, \ldots \lambda_n$ satisfying 
+        \begin{equation}
+            \label{eq:eigenvalues_rel}
+            \left\lvert \lambda_1 \right\rvert > \left\lvert \lambda_2 \right\rvert > \ldots > \left\lvert \lambda_n \right\rvert
+        \end{equation}
+        then the following sequence for $A_1 = A$ and $k = 1, 2, \ldots$
+        \begin{equation}
+            \label{eq:A_sequence}
+            \begin{cases}
+                A_k = Q_k R_k \\
+                A_{k+1} = R_k Q_k 
+            \end{cases} 
+        \end{equation}
+        converges to an upper triangular matrix where $(A_k)_{ii} = \lambda_i, \, i = 1, 2, \ldots, n$.
+        In case (\ref{eq:eigenvalues_rel}) is not satisfied, this sequence converges to a triangular matrix with square blocks of order at most 2 along the diagonal. \newline
+        If $A$ is symmetric, then the sequence converges to a diagonal matrix. 
+    \end{theorem}
+\end{frame}
+
+\begin{frame}[fragile]{QR Method}
+    So a basic implementation would be like this:
+    \begin{lstlisting}[language=Matlab]
+    while err < toll
+        [Q, R] = qr(A);
+        A = R * Q;
+
+        err = max( max( tril(A, -1) ) );
+    end \end{lstlisting}
+    This method could be speed up using a technique called \textit{shifing}:
+    \begin{lstlisting}[language=Matlab]
+    n = length( A );
+    while err < toll
+        % A(n, n) is an usual choice, it could be any real number
+        T = A(n, n) * eye(n);
+        [Q, R] = qr( A - T );
+        A = R * Q + T;
+
+        err = max( max( tril(A, -1) ) );
+    end \end{lstlisting}
+\end{frame}
+
+\begin{frame}{QR Method}
+    In our case, this method must be applied to $A A^T$ and $A^T A$, so if (\ref{eq:A_sequence}) converges then we have a diagonal matrix. \newline
+    If we consider the diagonalization of $B$, where $B = A A^T$ or $B = A^T A$:
+    $$
+    B = P \Lambda P^{-1} =  P \Lambda P^T
+    $$
+    As $B$ can be factorized using (\ref{eq:A_sequence}), the matrix containing the eigenvectors must be equal to:
+    $$
+    P = \prod_i Q_i = Q_1 Q_2 Q_3 \cdots
+    $$ \bigskip
+
+    Hence, for every iteration $B_k = Q_k R_k$ and $B_{k+1} = R_k Q_k$, requiring each step to have a computational cost equal to $O(\frac{2 n^3}{3})$.
+\end{frame}
+
+\subsection{Improving QR Method using Givens matrices}
+
+\begin{frame}{Hessember Reduction}
+
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Prova}
+    \lstinputlisting[language=Matlab]{../givens.m}
 \end{frame}
 
 \section{References}
