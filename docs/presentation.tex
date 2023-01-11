@@ -1,6 +1,7 @@
 \documentclass[10pt]{beamer}
 \definecolor{title}{RGB}{1, 45, 112}
 \definecolor{body}{RGB}{218, 233, 255}
+\definecolor{background}{RGB}{250, 250, 250}
 \usetheme[progressbar=frametitle]{metropolis}
 \usecolortheme{wolverine}
 \usefonttheme{professionalfonts}
@@ -9,6 +10,17 @@
 \setbeamercolor{block body}{bg=body!40,fg=black}
 \setbeamertemplate{section in toc}[square]
 \setbeamertemplate{subsection in toc}[square]
+
+\usepackage{tikz}
+\tikzset{
+    use page relative coordinates/.style={
+        shift={(current page.south west)},
+        x={(current page.south east)},
+        y={(current page.north west)}
+    },
+}
+
+\usepackage{algpseudocode}
 
 \usepackage[T1]{fontenc}
 \usepackage{libertinus}
@@ -43,6 +55,8 @@
 
 \usepackage{bm}
 \usepackage{amsmath, amssymb}
+\DeclareMathOperator{\sign}{sign}
+
 \usepackage{ragged2e}
 \justifying
 
@@ -204,11 +218,11 @@
 
 \begin{frame}{QR Method}
     In our case, this method must be applied to $A A^T$ and $A^T A$, so if (\ref{eq:A_sequence}) converges then we have a diagonal matrix. \newline
-    If we consider the diagonalization of $B$, where $B = A A^T$ or $B = A^T A$:
+    Now, consider the diagonalization of $B$, where $B = A A^T$ or $B = A^T A$:
     $$
     B = P \Lambda P^{-1} =  P \Lambda P^T
     $$
-    As $B$ can be factorized using (\ref{eq:A_sequence}), the matrix containing the eigenvectors must be equal to:
+    As $B$ can be factored using (\ref{eq:A_sequence}), the matrix containing the eigenvectors must be equal to:
     $$
     P = \prod_i Q_i = Q_1 Q_2 Q_3 \cdots
     $$ \bigskip
@@ -216,10 +230,73 @@
     Hence, for every iteration $B_k = Q_k R_k$ and $B_{k+1} = R_k Q_k$, requiring each step to have a computational cost equal to $O(\frac{2 n^3}{3})$.
 \end{frame}
 
-\subsection{Improving QR Method using Givens matrices}
+\subsection{Improving QR Method using Givens rotation matrices}
 
-\begin{frame}{Hessember Reduction}
+\begin{frame}{Hessemberg Reduction}
+    To achieve a lower computational cost, one solution consists in transforming $B$ in a similar tridiagonal matrix using Householder matrices. \newline
+    A triangular matrix can be obtained because $B$ is symmetric. \\  \bigskip
+    In general, the process of trasforming a matrix in a similar matrix using Householder matrices allows us to obtain a matrix in which $B_{ij} = 0$, for all $i > j$. Such a matrix is called a \textit{Hessemberg matrix}. \bigskip
 
+    Consequently, after $B$ has been transformed, each step of the previous code can be realized using \textit{Givens rotation matrices}.
+\end{frame}
+
+\begin{frame}{Givens rotation matrices}
+    A \textit{Givens rotation} can be represented with the following matrix:
+    $$
+    G_{ij} =
+    \begin{pmatrix}
+        1 & \cdots & 0 & \cdots & 0 & \cdots & 0 \\
+        \vdots & \ddots & \vdots & & \vdots & & \vdots \\
+        0 & \cdots & c & \cdots & -s & \cdots & 0 \\
+        \vdots & & \vdots & \ddots & \vdots & & \vdots \\
+        0 & \cdots & s & \cdots & c & \cdots & 0 \\
+        \vdots & & \vdots & & \vdots & \ddots & \vdots \\
+        0 & \cdots & 0 & \cdots & 0 & \cdots & 1
+    \end{pmatrix}
+    $$ \\ \bigskip \bigskip
+
+    where $c = \cos \theta$ and  $s = \sin \theta$, for a particular value of $ \theta \in [0, \, 2 \pi] $. \newline
+    A rotation occurs in the plane spanned by the two coordinates axes $i$ and $j$.
+
+    \begin{tikzpicture}[remember picture,overlay,use page relative coordinates]
+        \node (a) at (0.75,0.636) {};
+        \draw[stealth-] (a) --++ (0.07,0.0) node[circle,fill=background,at end] {i};
+        \node (b) at (0.75,0.516) {};
+        \draw[stealth-] (b) --++ (0.07,0.0) node[circle,fill=background,at end] {j};
+        \node (c) at (0.477,0.38) {};
+        \draw[stealth-] (c) --++ (0.0,-0.1) node[circle,fill=background,at end] {i};
+        \node (d) at (0.592,0.38) {};
+        \draw[stealth-] (d) --++ (0.0,-0.1) node[circle,fill=background,at end] {j};
+    \end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Givens rotation matrices}
+    Using the following values:
+    $$
+    \begin{aligned}
+        \cos \theta &=  \cfrac{\left\lvert b_{ii} \right\rvert}{ \sqrt{ b_{ii}^2 +   b_{ji}^2} } \\
+        \sin \theta &= \sign \left( \cfrac{ b_{ji} }{ b_{ii} } \right)   \, \cfrac{\left\lvert b_{ji} \right\rvert}{ \sqrt{ b_{ii}^2 +   b_{ji}^2} } \\
+    \end{aligned}
+    $$
+    when $B$ gets left multiplied by $G_{ij}$, the final matrix will have the element in position $(j, \, i)$\footnote{Note that the indices are reversed} equal to $0$. \newline
+    Therefore, instead of factoring $B$ at each step by the $QR$ method, if $B$ is tridiagonal, we can simply iterate $n$ times by constructing $G_{k\,k+1}$ and eliminating the elements in position $(k+1, \, k)$ and $(k, \, k+1)$.
+\end{frame}
+
+\begin{frame}{Pseudocode for finding eigenvalues and eigenvectors}
+    A pseudocode of what to do should clarify what we have done so far (excluding shifting for brevity):
+    \begin{algorithmic}
+        \State $B, P \gets $ hessemberg($ B $)
+        \While{error > toll}
+            \For{$k = 1, 2, \ldots, n$}
+                \State construct $G_{k \, k+1}$
+                \State $B \gets G_{k \, k+1} B G_{k \, k+1}^T$
+                \State $P \gets P G_{k \, k+1}^T$
+            \EndFor
+            \State update error
+        \EndWhile
+    \end{algorithmic}
+    The function implementing the Hessemberg reduction must return the matrix used for the transformation, meaning that $B = P H P^T$. \newline
+    $P$ is updated in this way because $Q_i = G_{12}^i G_{23}^i \cdots G_{n-1 n}^i$, where $i$ denotes the generic iteration for error minimization.
 \end{frame}
 
 \begin{frame}[fragile, allowframebreaks]{Prova}
@@ -227,7 +304,7 @@
 \end{frame}
 
 \section{References}
-\begin{frame}[allowframebreaks, noframenumbering]{References}
+\begin{frame}[plain, allowframebreaks, noframenumbering]{References}
     \printbibliography
 \end{frame}
 
