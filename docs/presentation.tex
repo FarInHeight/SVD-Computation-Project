@@ -295,12 +295,40 @@
             \State update error
         \EndWhile
     \end{algorithmic}
-    The function implementing the Hessemberg reduction must return the matrix used for the transformation, meaning that $B = P H P^T$. \newline
-    $P$ is updated in this way because $Q_i = G_{12}^i G_{23}^i \cdots G_{n-1 n}^i$, where $i$ denotes the generic iteration for error minimization.
+    The function implementing the Hessemberg reduction must also return the matrix used for the transformation, meaning that $B = P H P^T$. \newline
+    Note that $P$ is updated in this way because $Q_i = G_{12}^i G_{23}^i \cdots G_{n-1 n}^i$, where $i$ denotes the generic iteration for error minimization.
 \end{frame}
 
-\begin{frame}[fragile, allowframebreaks]{Prova}
+\section{The Algorithm}
+
+\subsection{Calculate U given V}
+
+\begin{frame}{Calculation of left singular vectors}
+    Suppose we start computing $V$ by the method explained in the previous slides. \newline
+    We apply the method to $A^T A$ and get $P = V$ and $B = \Sigma^2$. \newline
+    Once we have take the square root of the singular values, by explicitly writing $\Sigma$, the matrix containing the left singulat vectors can be calculated as:
+    $$
+    A = U \Sigma V^T \Rightarrow U = A V \Sigma^{-1}
+    $$
+    The algorithm is now compplete. The next slides will illustrate the code.
+\end{frame}
+
+\subsection{Code}
+
+\begin{frame}[fragile]{Function to calculate Givens rotation matrices}
     \lstinputlisting[language=Matlab]{../givens.m}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Function to calculate the Hessemberg reduction}
+    \lstinputlisting[language=Matlab]{../hessemberg.m}
+\end{frame}
+
+\begin{frame}[fragile, allowframebreaks]{Function to calculate singular values and singular vectors}
+    \lstinputlisting[language=Matlab]{../singular_vectors.m}
+\end{frame}
+
+\begin{frame}[fragile]{Function to calculate SVD}
+    \lstinputlisting[language=Matlab]{../custom_svd.m}
 \end{frame}
 
 \section{References}
