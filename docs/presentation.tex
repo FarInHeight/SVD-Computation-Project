@@ -56,6 +56,7 @@
 \usepackage{bm}
 \usepackage{amsmath, amssymb}
 \DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
 
 \usepackage{ragged2e}
 \justifying
@@ -122,7 +123,7 @@
         $$ \sigma_1 \ge \ldots \ge \sigma_{r} > \sigma_{r + 1} = \ldots = \sigma_p = 0  $$
         then
         \begin{itemize}
-            \item $rank(A) = r$
+            \item $\rank(A) = r$
             \item $ A = \sum \limits_{i = 1}^{r} \bm{u_i} \sigma_i \bm{v_i}^T $
         \end{itemize}
     \end{theorem}
@@ -132,14 +133,14 @@
 
 \begin{frame}{Definition of SVD}
     \begin{block}{Lower rank approximation}
-        Let $A \in \mathbb{R}^{m \times n}$ be a matrix whose rank is $rank(A) = r$. \\
+        Let $A \in \mathbb{R}^{m \times n}$ be a matrix whose rank is $\rank(A) = r$. \\
         If for a fixed integer value $k < r$ we define
         \begin{equation}
             \label{eq:lower_rank}
             A_k = \sum \limits_{i = 1}^{k} \sigma_i \bm{u_i}  \bm{v_i}^T 
         \end{equation}
         and
-        $$ \mathcal{B} = \left\{ B \in \mathbb{R}^{m \times n} : rank(B) = k \right\}$$
+        $$ \mathcal{B} = \left\{ B \in \mathbb{R}^{m \times n} : \rank(B) = k \right\}$$
         then 
         $$ \min_{B \in \mathcal{B}} \left\lVert A - B \right\rVert _2 = \left\lVert A - A_k \right\rVert _2 = \sigma_{k + 1} $$
     \end{block}
@@ -166,7 +167,7 @@
     $$ AA^T U = U \Sigma \Sigma^T $$
     Hence $U$ is the matrix of eigenvectors of $AA^T$. \bigskip
 
-    Since $rank(A) = r$, only the first $r$ eigenvalues of $AA^T$ and $A^T A$ are non-zero.
+    Since $\rank(A) = r$, only the first $r$ eigenvalues of $AA^T$ and $A^T A$ are non-zero.
 \end{frame}
 
 \section{Finding eigenvalues and eigenvectors}
