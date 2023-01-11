@@ -60,7 +60,7 @@
 \usepackage{ragged2e}
 \justifying
 
-\usepackage[backend=biber, style=verbose]{biblatex}
+\usepackage[backend=biber, style=ieee]{biblatex}
 \addbibresource{references.bib}
 \nocite{*}
 
@@ -306,7 +306,7 @@
 \begin{frame}{Calculation of left singular vectors}
     Suppose we start computing $V$ by the method explained in the previous slides. \newline
     We apply the method to $A^T A$ and get $P = V$ and $B = \Sigma^2$. \newline
-    Once we have take the square root of the singular values, by explicitly writing $\Sigma$, the matrix containing the left singulat vectors can be calculated as:
+    Once we have take the square root of the singular values, by explicitly writing $\Sigma$, the matrix containing the left singular vectors can be calculated as:
     $$
     A = U \Sigma V^T \Rightarrow U = A V \Sigma^{-1}
     $$
@@ -329,6 +329,21 @@
 
 \begin{frame}[fragile]{Function to calculate SVD}
     \lstinputlisting[language=Matlab]{../custom_svd.m}
+\end{frame}
+
+\section{Application to Big Data}
+
+\subsection{Dimensionality reduction}
+
+\begin{frame}{Dimensionality reduction}
+    The SVD decomposition can be applied to Big Data in order to reduce the dimensionality of datasets. \\ \bigskip
+
+    As an example, consider the dataset \cite{10.1007/978-3-030-35249-3_76} containing $33$ different attributes for $145$ students, which includes student ID, personal information and data, and higher education performance ratings\footnote{\url{https://archive.ics.uci.edu/ml/datasets/Higher+Education+Students+Performance+Evaluation+Dataset}}. \\
+    Dimensionality can be reduced as follows:
+    \begin{enumerate}
+        \item truncate the SVD retaining $k$ singular values, $A \approx U_k \Sigma_k V_k^T$;
+        \item compute the modified dataset as $D' = D V_k = U_k \Sigma_k$.
+    \end{enumerate}
 \end{frame}
 
 \section{References}
