@@ -9,7 +9,7 @@ function [U, S, V] = custom_svd(A, toll)
     minimum = min(dims);
 
     if minimum == dims(1)
-        [U, V, S1] = order_values(S, S1, U, V, 1);
+        [U, V, S] = order_values(S, S1, U, V, 1);
         
         for k = 1:minimum
             B = A';
