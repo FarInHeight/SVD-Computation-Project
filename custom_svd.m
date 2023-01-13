@@ -1,65 +1,34 @@
 function [U, S, V] = custom_svd(A, toll)
-%CUSTOM_SVD Function to compute the SVD factorization of a matrix
+%CUSTOM_SVD Function to compute the SVD decomposition of a matrix
 %   Given a matrix A as input and a tollerance for the stopping criterion,
-%   this function computes the SVD factorization of A.
-    [U, S] = singular_vectors(A, toll, true);
+%   this function computes the SVD decomposition of A.
+    [m, n] = size(A);
     [V, S1] = singular_vectors(A, toll, false);
 
-    dims = size(A);
-    minimum = min(dims);
+    [New_Diag, s_order] = sort(diag(S1), 'descend');
+    
+    S = diag(New_Diag);
 
-    if minimum == dims(1)
-        [U, V, S] = order_values(S, S1, U, V, 1);
-        
-        for k = 1:minimum
-            B = A';
-            constant = B(1, :) * U(:, k);
-            if sign( constant ) ~= sign( V(1, k) )
-                V(:, k) = - V(:, k);
-            end
+    new_order = 1:n;
+    for h = 1:length(s_order)
+        if h ~= s_order(h)
+            new_order(h) = s_order(h);
         end
+    end
+
+    V = V(:, new_order);
+
+    arr = New_Diag;
+    arr(arr > 0) = NaN;
+    [zero, index] = max(arr, [], 'omitnan');
+    if index ~= 1 
+        arr = New_Diag(1 : index - 1);
     else
-        [U, V, S] = order_values(S, S1, U, V, 2);
-
-        for k = 1:minimum
-            constant = A(1, :) * V(:, k);
-            if sign( constant ) ~= sign( U(1, k) )
-                U(:, k) = - U(:, k);
-            end
-        end
+        arr = New_Diag;
     end
 
-    function [U1, V1, New_S] = order_values(S, S1, U, V, type)
-        [New_Diag, s_order] = sort(diag(S), 'descend');
-        
-        S = diag(New_Diag);
-
-        new_order = 1:dims(1);
-        for h = 1:length(s_order)
-            if h ~= s_order(h)
-                new_order(h) = s_order(h);
-            end
-        end
-    
-        U1 = U(:, new_order);
-
-        [New_Diag, s_order] = sort(diag(S1), 'descend');
-    
-        S1 = diag(New_Diag);
-        
-        new_order = 1:dims(2);
-        for h = 1:length(s_order)
-            if h ~= s_order(h)
-                new_order(h) = s_order(h);
-            end
-        end
-    
-        V1 = V(:, new_order);
-
-        if type == 1
-            New_S = S1(1:minimum, :);
-        else
-            New_S = S(:, 1:minimum);
-        end
-    end
+    S1 = diag( 1./ arr );
+    S1(n, 1) = 0;
+    S1(1, n) = 0;
+    U = A*V*S1;
 end

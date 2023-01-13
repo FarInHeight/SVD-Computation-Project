@@ -11,6 +11,9 @@
 \setbeamertemplate{section in toc}[square]
 \setbeamertemplate{subsection in toc}[square]
 
+\usepackage{graphicx}
+\graphicspath{ {../images/} }
+
 \usepackage{tikz}
 \tikzset{
     use page relative coordinates/.style={
@@ -57,6 +60,7 @@
 \usepackage{amsmath, amssymb}
 \DeclareMathOperator{\sign}{sign}
 \DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\energy}{E}
 
 \usepackage{ragged2e}
 \justifying
@@ -90,14 +94,17 @@
     \frametitle{Definition of SVD}
     \begin{theorem}
         Given a matrix $A \in \mathbb{R}^{m \times n}$, it can always be found a decomposition such that
-        $$A = U \Sigma V^T$$
+        \begin{equation}
+            \label{eq:SVD}
+            A = U \Sigma V^T
+        \end{equation}
         where $U \in \mathbb{R}^{m \times m}$, $V \in \mathbb{R}^{n \times n}$ and $\Sigma \in \mathbb{R}^{m \times n}$.
 
         $U$ and $V$ are two orthogonal matrices and $\Sigma$ is a diagonal matrix, namely:
         $$ ( \Sigma )_{ij} = 
             \begin{cases}
-                0, & i \ne j \\
-                \sigma_i, & i = j
+                \sigma_i, & i = j \\
+                0, & i \ne j 
             \end{cases} 
         $$
         where $\sigma_1 \ge \sigma_2 \ge \ldots  \ge \sigma_p \ge 0$, $p = \min\{m, n\}$.
@@ -128,7 +135,7 @@
         \end{itemize}
     \end{theorem}
 
-    This means that all other $p-r$ dimensions of matrix $A$ are linear combinations of the first $r$.
+    It means that all other $p-r$ dimensions of matrix $A$ are linear combinations of the first $r$.
 \end{frame}
 
 \begin{frame}{Definition of SVD}
@@ -157,7 +164,7 @@
     $$ A^T A = ( V \Sigma^T U^T )(U \Sigma V^T) = V \Sigma^T \Sigma V^T$$
     Furthermore, this equation can be written as:
     $$ A^T A V = V \Sigma^T \Sigma $$
-    This means that the diagonal entries of the square matrix $ \Sigma^T \Sigma $, which are the square of the singular values, are the eigenvalues of matrix $A^T A$ and $ V $ is the matrix of eigenvectors.
+    It means that the diagonal entries of the square matrix $ \Sigma^T \Sigma $, which are the square of the singular values, are the eigenvalues of matrix $A^T A$ and $ V $ is the matrix of eigenvectors.
 \end{frame}
 
 \begin{frame}{Singular values computation}
@@ -198,17 +205,17 @@
 \begin{frame}[fragile]{QR Method}
     So a basic implementation would be like this:
     \begin{lstlisting}[language=Matlab]
-    while err < toll
+    while err > toll
         [Q, R] = qr(A);
         A = R * Q;
 
         err = max( max( tril(A, -1) ) );
     end \end{lstlisting}
-    This method could be speed up using a technique called \textit{shifing}:
+    This method can be sped up by using a technique called \textit{shifting}:
     \begin{lstlisting}[language=Matlab]
     n = length( A );
-    while err < toll
-        % A(n, n) is an usual choice, it could be any real number
+    while err > toll
+        % A(n, n) is a usual choice, it can be any real number
         T = A(n, n) * eye(n);
         [Q, R] = qr( A - T );
         A = R * Q + T;
@@ -280,24 +287,28 @@
     \end{aligned}
     $$
     when $B$ gets left multiplied by $G_{ij}$, the final matrix will have the element in position $(j, \, i)$\footnote{Note that the indices are reversed} equal to $0$. \newline
-    Therefore, instead of factoring $B$ at each step by the $QR$ method, if $B$ is tridiagonal, we can simply iterate $n$ times by constructing $G_{k\,k+1}$ and eliminating the elements in position $(k+1, \, k)$ and $(k, \, k+1)$.
+    Therefore, instead of factoring $B$ at each step by the $QR$ method, if $B$ is tridiagonal, we can simply iterate $n - 1$ times by constructing $G_{k\,k+1}$ and eliminating the elements in position $(k+1, \, k)$ and $(k, \, k+1)$.
 \end{frame}
 
 \begin{frame}{Pseudocode for finding eigenvalues and eigenvectors}
     A pseudocode of what to do should clarify what we have done so far (excluding shifting for brevity):
     \begin{algorithmic}
+        \footnotesize
         \State $B, P \gets $ hessemberg($ B $)
         \While{error > toll}
             \For{$k = 1, 2, \ldots, n$}
                 \State construct $G_{k \, k+1}$
-                \State $B \gets G_{k \, k+1} B G_{k \, k+1}^T$
+                \State $B \gets G_{k \, k+1} B$
+            \EndFor
+            \For{$k = 1, 2, \ldots, n$}
+                \State $B \gets B G_{k \, k+1}^T$
                 \State $P \gets P G_{k \, k+1}^T$
             \EndFor
             \State update error
         \EndWhile
     \end{algorithmic}
     The function implementing the Hessemberg reduction must also return the matrix used for the transformation, meaning that $B = P H P^T$. \newline
-    Note that $P$ is updated in this way because $Q_i = G_{12}^i G_{23}^i \cdots G_{n-1 n}^i$, where $i$ denotes the generic iteration for error minimization.
+    Note that $P$ is updated in this way because $Q_i = G_{12}^i G_{23}^i \cdots G_{n-1 \, n}^i$, where $i$ denotes the generic iteration for error minimization.
 \end{frame}
 
 \section{The Algorithm}
@@ -311,7 +322,8 @@
     $$
     A = U \Sigma V^T \Rightarrow U = A V \Sigma^{-1}
     $$
-    The algorithm is now compplete. The next slides will illustrate the code.
+    Unlike (\ref{eq:SVD}), $U$ is a rectangular matrix, and $\Sigma$ and $V$ are square matrices. \newline
+    The algorithm is now complete. The next slides will illustrate the code.
 \end{frame}
 
 \subsection{Code}
@@ -328,7 +340,7 @@
     \lstinputlisting[language=Matlab]{../singular_vectors.m}
 \end{frame}
 
-\begin{frame}[fragile]{Function to calculate SVD}
+\begin{frame}[fragile, allowframebreaks]{Function to calculate SVD}
     \lstinputlisting[language=Matlab]{../custom_svd.m}
 \end{frame}
 
@@ -337,14 +349,50 @@
 \subsection{Dimensionality reduction}
 
 \begin{frame}{Dimensionality reduction}
-    The SVD decomposition can be applied to Big Data in order to reduce the dimensionality of datasets. \\ \bigskip
+    The SVD decomposition can be applied to Big Data in order to reduce the dimensionality of data sets. \\ \bigskip
 
-    As an example, consider the dataset \cite{10.1007/978-3-030-35249-3_76} containing $33$ different attributes for $145$ students, which includes student ID, personal information and data, and higher education performance ratings\footnote{\url{https://archive.ics.uci.edu/ml/datasets/Higher+Education+Students+Performance+Evaluation+Dataset}}. \\
+    As an example, consider the data set \cite{10.1007/978-3-030-35249-3_76} containing $33$ different attributes for $145$ students, which includes student ID, personal information and data, and higher education performance ratings\footnote{\url{https://archive.ics.uci.edu/ml/datasets/Higher+Education+Students+Performance+Evaluation+Dataset}}. \\
     Dimensionality can be reduced as follows:
     \begin{enumerate}
-        \item truncate the SVD retaining $k$ singular values, $A \approx U_k \Sigma_k V_k^T$;
-        \item compute the modified dataset as $D' = D V_k = U_k \Sigma_k$.
+        \item truncate the SVD retaining top-$k$ singular values, $A \approx U_k \Sigma_k V_k^T$;
+        \item compute the modified data set as $D' = D V_k = U_k \Sigma_k$.
     \end{enumerate}
+\end{frame}
+
+\begin{frame}{Dimensionality reduction}
+    $D'$ represents a new data set that corresponds to the projection of the data set $D$ on a $k$-dimensional basis system of right singular vectors. 
+
+    \begin{block}{Number of singular values}
+        As indicated in \cite{leskovec2020mining}, a usual choice of $k$ is dictated by maintaining enough singular values to make up $90 \% $ of the energy in $\Sigma$. \\
+        The total energy of a data set is:
+        $$ \energy ( \Sigma )  = \sum_{i = 1}^{r} \sigma_i^2 $$
+        where $r = \rank (D)$.
+    \end{block}
+
+    By plotting the singular values we can get an insight of how they are distributed and how many of them we can retain. 
+\end{frame}
+
+\begin{frame}{Magnitudes of singular values}
+    \begin{figure}[t]
+        \includegraphics[width=9cm]{singular_values_magnitudes.pdf}
+        \centering
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Retained energy}
+    From what we can see, with $3$ singular values we can get about $25,346$ of energy, which is enough to exceed $90 \%$ of $\energy ( \Sigma ) = 27,830$. 
+    \begin{figure}[t]
+        \includegraphics[width=7.7cm]{retained_energy.pdf}
+        \centering
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Decreasing error as singular values increase}
+    By increasing the number of retained singular values, the following graph is obtained:
+    \begin{figure}[t]
+        \includegraphics[width=7.7cm]{error_wrt_A.pdf}
+        \centering
+    \end{figure}
 \end{frame}
 
 \section{References}
