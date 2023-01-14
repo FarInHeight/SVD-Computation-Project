@@ -1,7 +1,7 @@
 function plot_singular_values(singular_values)
 %PLOT_SINGULAR_VALUES Plotting magnitudes of singular values and retained energy
 %   Given a vector S containing singular values in decreasing order, this
-%   function plots three graphs indicating:
+%   function plots two graphs indicating:
 %   - magnitudes of singular values vs indices of singular values;
 %   - ritained energy as the number of singular values increases, starting
 %   with the highest indeces.

@@ -209,7 +209,7 @@
         [Q, R] = qr(A);
         A = R * Q;
 
-        err = max( max( tril(A, -1) ) );
+        err = max( max( abs( tril(A, -1) ) ) );
     end \end{lstlisting}
     This method can be sped up by using a technique called \textit{shifting}:
     \begin{lstlisting}[language=Matlab]
@@ -220,7 +220,7 @@
         [Q, R] = qr( A - T );
         A = R * Q + T;
 
-        err = max( max( tril(A, -1) ) );
+        err = max( max( abs( tril(A, -1) ) ) );
     end \end{lstlisting}
 \end{frame}
 
@@ -308,7 +308,7 @@
         \EndWhile
     \end{algorithmic}
     The function implementing the Hessemberg reduction must also return the matrix used for the transformation, meaning that $B = P H P^T$. \newline
-    Note that $P$ is updated in this way because $Q_i = G_{12}^i G_{23}^i \cdots G_{n-1 \, n}^i$, where $i$ denotes the generic iteration for error minimization.
+    Note that $P$ is updated in this way because $Q_i = G_{12}^{(i)} G_{23}^{(i)} \cdots G_{n-1 \, n}^{(i)}$, where $i$ denotes the generic iteration for error minimization.
 \end{frame}
 
 \section{The Algorithm}
