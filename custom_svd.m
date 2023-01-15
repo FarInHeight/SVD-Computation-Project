@@ -5,19 +5,24 @@ function [U, S, V] = custom_svd(A, toll)
     [m, n] = size(A);
     [V, S1] = singular_vectors(A, toll, false);
 
-    [New_Diag, s_order] = sort(diag(S1), 'descend');
-    
-    S = diag(New_Diag);
-
-    new_order = 1:n;
-    for h = 1:length(s_order)
-        if h ~= s_order(h)
-            new_order(h) = s_order(h);
+    % sort singular values and right singular vectors if they are not
+    % already
+    if ~ issorted( diag(S1) )
+        [New_Diag, s_order] = sort(diag(S1), 'descend');
+        
+        S = diag(New_Diag);
+        
+        new_order = 1:n;
+        for h = 1:length(s_order)
+            if h ~= s_order(h)
+                new_order(h) = s_order(h);
+            end
         end
+        
+        V = V(:, new_order);
     end
 
-    V = V(:, new_order);
-
+    % take only non-zero diagonal entries
     arr = New_Diag;
     arr(arr > 0) = NaN;
     [zero, index] = max(arr, [], 'omitnan');
@@ -27,8 +32,11 @@ function [U, S, V] = custom_svd(A, toll)
         arr = New_Diag;
     end
 
+    % modify S1 = inv(S) to fit dimensions
     S1 = diag( 1./ arr );
     S1(n, 1) = 0;
     S1(1, n) = 0;
+
+    % compute U
     U = A*V*S1;
 end

@@ -9,13 +9,16 @@ function [A, P] = hessemberg(A)
         sigma = sign(A(k+1, k)) * norm(A(k+1:n, k));
         v = [sigma + A(k+1, k); A(k+2:n, k)]; 
         beta = 1 / (sigma * (sigma + A(k+1, k))); 
+        % transform lower triangular matrix
         for j=k:n
             tau = beta * (v' * A(k+1:n, j)); 
             A(k+1:n, j) = A(k+1:n, j) - tau * v;
         end
+        % transform upper triangular matrix
         for j=1:n
             tau = beta * (A(j, k+1:n) * v);
             A(j, k+1:n) = A(j, k+1:n) - tau * v';
+            % modify P in a similar way
             tau = beta * (P(j, k+1:n) * v); 
             P(j, k+1:n) = P(j, k+1:n) - tau * v';
         end
