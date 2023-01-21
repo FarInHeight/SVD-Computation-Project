@@ -243,7 +243,7 @@
 \begin{frame}{Hessemberg Reduction}
     To achieve a lower computational cost, one solution consists in transforming $B$ in a similar tridiagonal matrix using Householder matrices. \newline
     A triangular matrix can be obtained because $B$ is symmetric. \\  \bigskip
-    In general, the process of trasforming a matrix in a similar matrix using Householder matrices allows us to obtain a matrix in which $B_{ij} = 0$, for all $i > j$. Such a matrix is called a \textit{Hessemberg matrix}. \bigskip
+    In general, the process of trasforming a matrix in a similar matrix using Householder matrices allows us to obtain a matrix in which $B_{ij} = 0$, for all $i > j + 1$. Such a matrix is called a \textit{Hessemberg matrix}. \bigskip
 
     Consequently, after $B$ has been transformed, each step of the previous code can be realized using \textit{Givens rotation matrices}.
 \end{frame}
