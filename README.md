@@ -6,7 +6,7 @@ $V$ and $\Sigma$ are computed by the $QR$ method transforming $A^T A$ into hesse
 
 Once $V$ is calculated as the product of $Q_i$ matrices, $U$ is computed as $U = A V \Sigma^{-1}$.
 
-A complete overview of the project, with mathematics used, is available in [presentation.pdf](docs/presentation.pdf) (mathematical proofs are omitted; they can be found in the references).
+A complete overview of the project, with mathematics used, is available in [presentation.pdf](docs/presentation.pdf) (mathematical proofs are omitted).
 
 ## License
 [MIT License](LICENSE)
