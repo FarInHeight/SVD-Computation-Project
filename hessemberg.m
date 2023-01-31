@@ -1,8 +1,8 @@
 function [A, P] = hessemberg(A)
 %HESSEMBERG Fuction to compute the Hessember reduction of a matrix
 %   Given a matrix A, this function trasform A in a similar hessemberg
-%   matrix. It will be produced as output the hessember matrix and the 
-%   matrix P used for the transformation.
+%   matrix. The Hessember matrix and the P matrix used for the
+%   transformation will be produced as output.
     n = size(A, 2);
     P = eye(n);
     for k=1:n-2

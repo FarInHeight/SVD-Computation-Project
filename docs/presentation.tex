@@ -73,7 +73,7 @@
 \subtitle{An application to Big Data}
 \author{Davide Sferrazza}
 \institute{Università degli Studi di Palermo}
-\date{\today}
+\date{February 01, 2023}
 
 \def\titlepage{%
   \usebeamertemplate{title page}%
@@ -152,7 +152,7 @@
         $$ \min_{B \in \mathcal{B}} \left\lVert A - B \right\rVert _2 = \left\lVert A - A_k \right\rVert _2 = \sigma_{k + 1} $$
     \end{block}
         
-    This result tell us that $A_k$ represents the best approximation (considering the \textit{spectral norm}) of rank $k$ of matrix $A$.
+    This result tells us that $A_k$ represents the best approximation (considering the \textit{spectral norm}) of rank $k$ of matrix $A$.
 \end{frame}
 
 \subsection{How can singular values be computed?}
@@ -243,7 +243,7 @@
 \begin{frame}{Hessemberg Reduction}
     To achieve a lower computational cost, one solution consists in transforming $B$ in a similar tridiagonal matrix using Householder matrices. \newline
     A triangular matrix can be obtained because $B$ is symmetric. \\  \bigskip
-    In general, the process of trasforming a matrix in a similar matrix using Householder matrices allows us to obtain a matrix in which $B_{ij} = 0$, for all $i > j + 1$. Such a matrix is called a \textit{Hessemberg matrix}. \bigskip
+    In general, the process of transforming a matrix in a similar matrix using Householder matrices allows us to obtain a matrix in which $B_{ij} = 0$, for all $i > j + 1$. Such a matrix is called a \textit{Hessemberg matrix}. \bigskip
 
     Consequently, after $B$ has been transformed, each step of the previous code can be realized using \textit{Givens rotation matrices}.
 \end{frame}
@@ -283,7 +283,7 @@
     $$
     \begin{aligned}
         \cos \theta &=  \cfrac{\left\lvert b_{ii} \right\rvert}{ \sqrt{ b_{ii}^2 +   b_{ji}^2} } \\
-        \sin \theta &= \sign \left( \cfrac{ b_{ji} }{ b_{ii} } \right)   \, \cfrac{\left\lvert b_{ji} \right\rvert}{ \sqrt{ b_{ii}^2 +   b_{ji}^2} } \\
+        \sin \theta &= - \sign \left( \cfrac{ b_{ji} }{ b_{ii} } \right)   \, \cfrac{\left\lvert b_{ji} \right\rvert}{ \sqrt{ b_{ii}^2 +   b_{ji}^2} } \\
     \end{aligned}
     $$
     when $B$ gets left multiplied by $G_{ij}$, the final matrix will have the element in position $(j, \, i)$\footnote{Note that the indices are reversed} equal to $0$. \newline
@@ -318,11 +318,13 @@
 \begin{frame}{Calculation of left singular vectors}
     Suppose we start computing $V$ by the method explained in the previous slides. \newline
     We apply the method to $A^T A$ and get $P = V$ and $B = \Sigma^2$. \newline
-    Once we have take the square root of the singular values, by explicitly writing $\Sigma$, the matrix containing the left singular vectors can be calculated as:
+    Once we have taken the square root of the singular values, by explicitly writing $\Sigma$, the matrix containing the left singular vectors can be calculated as:
     $$
     A = U \Sigma V^T \Rightarrow U = A V \Sigma^{-1}
     $$
-    Unlike (\ref{eq:SVD}), $U$ is a rectangular matrix, and $\Sigma$ and $V$ are square matrices. \newline
+    Unlike (\ref{eq:SVD}), $U$ is a rectangular matrix, and $\Sigma$ and $V$ are square matrices. 
+
+    
     The algorithm is now complete. The next slides will illustrate the code.
 \end{frame}
 
@@ -380,7 +382,7 @@
 \end{frame}
 
 \begin{frame}{Retained energy}
-    From what we can see, with $3$ singular values we can get about $25,346$ of energy, which is enough to exceed $90 \%$ of $\energy ( \Sigma ) = 27,830$. 
+    From what we can see, with $3$ singular values we can get about $25{,}346$ of energy, which is enough to exceed $90 \%$ of $\energy ( \Sigma ) = 27{,}830$. 
     \begin{figure}[t]
         \includegraphics[width=7.7cm]{retained_energy.pdf}
         \centering
