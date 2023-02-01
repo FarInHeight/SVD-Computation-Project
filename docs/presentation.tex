@@ -296,11 +296,11 @@
         \footnotesize
         \State $B, P \gets $ hessemberg($ B $)
         \While{error > toll}
-            \For{$k = 1, 2, \ldots, n$}
+            \For{$k = 1, 2, \ldots, n-1$}
                 \State construct $G_{k \, k+1}$
                 \State $B \gets G_{k \, k+1} B$
             \EndFor
-            \For{$k = 1, 2, \ldots, n$}
+            \For{$k = 1, 2, \ldots, n-1$}
                 \State $B \gets B G_{k \, k+1}^T$
                 \State $P \gets P G_{k \, k+1}^T$
             \EndFor
