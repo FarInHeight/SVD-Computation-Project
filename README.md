@@ -1,4 +1,4 @@
-# Advanced-Numerical-Methods-Project
+# Singular Value Decomposition
 This project is based on an implementation of SVD decomposition through the $QR$ method. It is enriched by shifting, Hessemberg reduction, and Givens rotation matrices.
 
 Basically, $$A = U \Sigma V^T$$
